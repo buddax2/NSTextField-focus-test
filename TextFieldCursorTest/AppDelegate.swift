@@ -12,7 +12,7 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
-    @IBOutlet weak var textField: NSTextField!
+    @IBOutlet weak var textField: MyTextField!
 
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
@@ -25,7 +25,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBAction func changeTextFieldSingleLineMode(sender: AnyObject) {
         let button = sender as NSButton
-//        textField.usesSingleLineMode = button.state
         if button.state == 1 {
             textField.usesSingleLineMode = true
         }
@@ -37,9 +36,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction func setTextFieldFocused(sender: AnyObject) {
         
         if (textField.acceptsFirstResponder == true) {
-            window.makeFirstResponder(textField)
+            textField.makeFocused()
         }
     }
 
 }
 
+class MyTextField: NSTextField {
+    func makeFocused() {
+        if super.becomeFirstResponder() == true {
+            let editor = self.currentEditor() as? NSTextView
+            editor?.invalidateTextContainerOrigin()
+        }
+    }
+}
